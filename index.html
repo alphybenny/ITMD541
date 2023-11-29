@@ -1,32 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-  <title>Weather</title>
+    <title>Weather Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-  <div class="container">
+  <header>		
     <h1>Weather Report</h1>
-
-    <!-- <button onclick="getSunriseSunset()">Get Sunrise Sunset</button> -->
-    <button class = "button1" onclick="getCurrentLocation()"><i class="fa fa-map-marker"></i> Get Weather for Current Location</button>
-    <!-- Add this input field for location search -->
-    <div>
-      <label for="locationQuery">Search Location:</label>
-      <!-- <input type="text" id="locationQuery" placeholder="Enter location"> -->
-      <input class='searchbar transparent' id='locationQuery' type='text' placeholder='enter city' />
-      <button class='button transparent' onclick="searchLocation()">Go</button>
-
-
-      <!-- <button class ="button1" onclick="searchLocation()">Search</button> -->
-    </div>
-    <div id="result"></div>
-  </div>
-
-  <script src="script.js"></script>
+        <button id="locationbutton" onclick="getCurrentLocation()"><i class="fa fa-map-marker"></i> Use Current Location</button>
+        <div id="searchRow">
+            <input type="text" id="locationSearch" placeholder="Search for a location">
+            <button id="searchBtn" onclick="searchLocation()">Search</button>
+        </div>
+        <div id="dashboard">
+            <!-- Today's Data -->
+            <div id="today">
+                <h2>Today</h2>
+                <p id="dateToday"></p>
+        
+                <div class="sun-data">
+                    <div>
+                        <h3>Sunrise</h3>
+                        <img width="128" height="128" class="sun-icon" src="images/sunrise.png" alt="Graphic: sunrise symbol" aria-hidden="true">
+                        <div id="sunriseToday"></div>
+                    </div>
+            
+                    <div>
+                        <h3>Sunset</h3>
+                        <img width="128" height="128" class="sun-icon" src="images/sunset.png" alt="Graphic: sunset symbol" aria-hidden="true">
+                        <div id="sunsetToday"></div>
+                    </div>
+                </div>
+                <br>
+                <p id="dawnToday">Dawn: </p>
+                <br>
+                <p id="duskToday">Dusk: </p>
+                <br>
+                <p id="dayLengthToday">Day Length: </p>
+                <br>
+                <p id="solarNoonToday">Solar Noon: </p>
+            </div>
+            <!-- Tomorrow's Data -->
+            <div id="tomorrow">
+                <h2>Tomorrow</h2>
+                <p id="dateTomorrow"></p>
+        
+                <div class="sun-data">
+                    <div>
+                        <h3>Sunrise</h3>
+                        <img width="128" height="128" class="sun-icon" src="images/sunrise.png" alt="Graphic: sunrise symbol" aria-hidden="true">
+                        <div id="sunriseTomorrow"></div>
+                    </div>
+        
+                    <div>
+                        <h3>Sunset</h3>
+                        <img width="128" height="128" class="sun-icon" src="images/sunset.png" alt="Graphic: sunset symbol" aria-hidden="true">
+                        <div id="sunsetTomorrow"></div>
+                    </div>
+                </div>
+                <br>
+                <p id="dawnTomorrow">Dawn: </p>
+                <br>
+                <p id="duskTomorrow">Dusk: </p>
+                <br>
+                <p id="dayLengthTomorrow">Day Length: </p>
+                <br>
+                <p id="solarNoonTomorrow">Solar Noon: </p>
+            </div>
+        </div>
+        
+        <p id="location"></p>
+        <br>
+        <p id="coordinates"></p>
+        <br>
+        <p id="timezone">Timezone: </p>
+        
+    </header>
+    <footer>
+        <p>Powered by <a href="https://geocode.maps.co/">Geolocation API</a> and <a href="https://sunrisesunset.io/api/">Sunrise Sunset API</a></p>
+        <!-- <p>Sunrisesunset Data provided by </p> -->
+        </footer>
+    <script src="script.js"></script>
 </body>
 </html>
+
+
+
+
+

@@ -2,10 +2,6 @@ let latitude;
 let longitude;
 
 function getSunriseSunset() {
-//   const latitude = document.getElementById('latitude').value;
-//   const longitude = document.getElementById('longitude').value;
-
-  // You may add additional validation for latitude and longitude inputs here
 
   const todayUrl = `https://api.sunrisesunset.io/json?lat=${latitude}&lng=${longitude}`;
   const tomorrowUrl = `https://api.sunrisesunset.io/json?lat=${latitude}&lng=${longitude}&date=tomorrow`;
@@ -13,37 +9,13 @@ function getSunriseSunset() {
   // Fetch data for today
   fetch(todayUrl)
     .then(response => response.json())
-    .then(data => displayResult('Today', data))
     .catch(error => console.error('Error fetching today\'s data:', error));
 
   // Fetch data for tomorrow
   fetch(tomorrowUrl)
     .then(response => response.json())
-    .then(data => displayResult('Tomorrow', data))
+
     .catch(error => console.error('Error fetching tomorrow\'s data:', error));
-}
-
-function displayResult(day, data) {
-  const resultDiv = document.getElementById('result');
-  //resultDiv.innerHTML = ''; // Clear the previous result in the div
-
-  if (data.status === 'OK') {
-    const results = data.results;
-    resultDiv.innerHTML += `<h2>${day}</h2>`;
-    resultDiv.innerHTML += `
-      <p>Sunrise: ${results.sunrise}</p>
-      <p>Sunset: ${results.sunset}</p>
-      <p>Dawn: ${results.dawn}</p>
-      <p>Dusk: ${results.dusk}</p>
-      <p>Day Length: ${results.day_length}</p>
-      <p>Solar Noon: ${results.solar_noon}</p>
-      <p>Timezone: ${results.timezone}</p>
-      <hr>`;
-  } else {
-    resultDiv.innerHTML += `<h2>${day}</h2>`;
-    resultDiv.innerHTML += '<p>Error retrieving data. Please try again.</p>';
-    resultDiv.innerHTML += '<hr>';
-  }
 }
 
 function getCurrentLocation() {
@@ -52,8 +24,11 @@ function getCurrentLocation() {
       position => {
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
-        // document.getElementById('latitude').value = latitude;
-        // document.getElementById('longitude').value = longitude;
+        var location = 'Current location'; 
+        document.getElementById('location').textContent = 'Location: ' + location;
+            document.getElementById('coordinates').textContent = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
+            updateDashboard(latitude, longitude, new Date());
+            updateDashboardTomorrow(latitude, longitude, new Date());
         getSunriseSunset();
       },
       error => {
@@ -68,9 +43,9 @@ function getCurrentLocation() {
 
 // Modify the searchLocation function to accept city as a parameter
 function searchLocation() {
-    debugger;
-  const city = document.getElementById('locationQuery').value;
-  const geocodeApiUrl = `https://geocode.maps.co/search?city=${encodeURIComponent(city)}`;
+  debugger;
+  var location = document.getElementById('locationSearch').value;
+  const geocodeApiUrl = `https://geocode.maps.co/search?city=${encodeURIComponent(location)}`;
 
   fetch(geocodeApiUrl)
     .then(response => response.json())
@@ -81,10 +56,58 @@ function searchLocation() {
 function handleGeocodeResult(data) {
   if (data && data.length > 0) {
     const location = data[0];
+    var locationvalue = document.getElementById('locationSearch').value;
     latitude= location.lat;
     longitude= location.lon;
+    document.getElementById('location').textContent = 'Location: ' + locationvalue;
+            document.getElementById('coordinates').textContent = 'Latitude: ' + latitude + ', Longitude: ' + longitude;
+            updateDashboard(latitude, longitude, new Date());
+            updateDashboardTomorrow(latitude, longitude, new Date());
     getSunriseSunset();
   } else {
     alert('Location not found. Please enter a valid location.');
   }
+}
+
+function updateDashboard(lat, lon, date) {
+  var dateStr = date.toISOString().split('T')[0];
+  document.getElementById('dateToday').textContent = 'Date: ' + dateStr; 
+
+  fetch('https://api.sunrisesunset.io/json?lat=' + lat + '&lng=' + lon + '&date=' + dateStr)
+  .then(response => response.json())
+  .then(data => {
+      var results = data.results;
+
+      document.getElementById('sunriseToday').textContent = results.sunrise;
+      document.getElementById('sunsetToday').textContent = results.sunset;
+      document.getElementById('dawnToday').textContent = 'Dawn: ' + results.dawn;
+      document.getElementById('duskToday').textContent = 'Dusk: ' + results.dusk;
+      document.getElementById('dayLengthToday').textContent = 'Day Length: ' + results.day_length;
+      document.getElementById('solarNoonToday').textContent = 'Solar Noon: ' + results.solar_noon;
+      document.getElementById('timezone').textContent = 'Timezone: ' + results.timezone;
+
+  })
+  .catch(error => console.error(error));
+}
+
+function updateDashboardTomorrow(lat, lon, date) {
+  var tomorrow = new Date(date);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  var dateStr = tomorrow.toISOString().split('T')[0];
+  document.getElementById('dateTomorrow').textContent = 'Date: ' + dateStr;  
+
+  fetch('https://api.sunrisesunset.io/json?lat=' + lat + '&lng=' + lon + '&date=' + dateStr)
+  .then(response => response.json())
+  .then(data => {
+      var results = data.results;
+
+      document.getElementById('sunriseTomorrow').textContent = results.sunrise;
+      document.getElementById('sunsetTomorrow').textContent = results.sunset;
+      document.getElementById('dawnTomorrow').textContent = 'Dawn: ' + results.dawn;
+      document.getElementById('duskTomorrow').textContent = 'Dusk: ' + results.dusk;
+      document.getElementById('dayLengthTomorrow').textContent = 'Day Length: ' + results.day_length;
+      document.getElementById('solarNoonTomorrow').textContent = 'Solar Noon: ' + results.solar_noon;
+
+  })
+  .catch(error => console.error(error));
 }
